@@ -1,0 +1,27 @@
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: aiops-bot-role
+rules:
+- apiGroups: [""]
+  resources: ["pods", "pods/log", "services", "nodes", "events", "namespaces"]
+  verbs: ["get", "list"]
+- apiGroups: ["apps"]
+  resources: ["deployments", "replicasets", "statefulsets"]
+  verbs: ["get", "list"]
+- apiGroups: ["metrics.k8s.io"]
+  resources: ["pods", "nodes"]
+  verbs: ["get", "list"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: aiops-bot-role-binding
+subjects:
+- kind: ServiceAccount
+  name: default
+  namespace: aiops-bot
+roleRef:
+  kind: ClusterRole
+  name: aiops-bot-role
+  apiGroup: rbac.authorization.k8s.io 

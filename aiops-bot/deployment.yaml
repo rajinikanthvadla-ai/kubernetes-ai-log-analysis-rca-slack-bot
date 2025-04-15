@@ -1,0 +1,68 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: aiops-bot
+  namespace: aiops-bot
+  labels:
+    app: aiops-bot
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: aiops-bot
+  template:
+    metadata:
+      labels:
+        app: aiops-bot
+    spec:
+      containers:
+      - name: aiops-bot
+        image: aiops-bot:latest
+        imagePullPolicy: Never
+        ports:
+        - containerPort: 3000
+        env:
+        - name: SLACK_BOT_TOKEN
+          valueFrom:
+            secretKeyRef:
+              name: slack-bot-secrets
+              key: SLACK_BOT_TOKEN
+        - name: SLACK_APP_TOKEN
+          valueFrom:
+            secretKeyRef:
+              name: slack-bot-secrets
+              key: SLACK_APP_TOKEN
+        - name: HUGGINGFACE_API_KEY
+          valueFrom:
+            secretKeyRef:
+              name: slack-bot-secrets
+              key: HUGGINGFACE_API_KEY
+        - name: HUGGINGFACE_MODEL
+          valueFrom:
+            secretKeyRef:
+              name: slack-bot-secrets
+              key: HUGGINGFACE_MODEL
+        - name: HUGGINGFACE_API_URL
+          valueFrom:
+            secretKeyRef:
+              name: slack-bot-secrets
+              key: HUGGINGFACE_API_URL
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 3000
+          initialDelaySeconds: 5
+          periodSeconds: 10
+        readinessProbe:
+          httpGet:
+            path: /health
+            port: 3000
+          initialDelaySeconds: 5
+          periodSeconds: 10
+        resources:
+          requests:
+            cpu: 100m
+            memory: 128Mi
+          limits:
+            cpu: 200m
+            memory: 256Mi 

@@ -1,0 +1,5 @@
+slack-bolt==1.18.0
+kubernetes==28.1.0
+requests==2.31.0
+flask==3.0.2
+python-json-logger==2.0.2 

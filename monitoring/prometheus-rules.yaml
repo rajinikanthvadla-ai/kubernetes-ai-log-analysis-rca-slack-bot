@@ -1,0 +1,37 @@
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  name: microservices-alerts
+  namespace: monitoring
+  labels:
+    app: prometheus
+spec:
+  groups:
+  - name: microservices
+    rules:
+    - alert: HighErrorRate
+      expr: sum(rate(http_requests_total{status=~"5.."}[5m])) / sum(rate(http_requests_total[5m])) * 100 > 5
+      for: 5m
+      labels:
+        severity: critical
+      annotations:
+        summary: High error rate detected
+        description: Error rate is above 5% for the last 5 minutes
+
+    - alert: HighLatency
+      expr: rate(http_request_duration_seconds_sum[5m]) / rate(http_request_duration_seconds_count[5m]) > 0.5
+      for: 5m
+      labels:
+        severity: warning
+      annotations:
+        summary: High latency detected
+        description: Request latency is above 500ms for the last 5 minutes
+
+    - alert: NoTraffic
+      expr: rate(http_requests_total[5m]) == 0
+      for: 5m
+      labels:
+        severity: warning
+      annotations:
+        summary: No traffic detected
+        description: No HTTP requests received in the last 5 minutes 

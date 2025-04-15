@@ -1,0 +1,18 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: grafana
+  namespace: monitoring
+  labels:
+    app.kubernetes.io/name: grafana
+spec:
+  type: NodePort
+  ports:
+    - port: 3000
+      targetPort: 3000
+      nodePort: 31000
+      protocol: TCP
+      name: http-grafana
+  selector:
+    app.kubernetes.io/name: grafana
+    app.kubernetes.io/instance: prometheus 
