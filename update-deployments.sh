@@ -2,7 +2,7 @@
 
 # Check if Docker Hub username is provided
 if [ -z "$1" ]; then
-    echo "Usage: $0 <dockerhub-username>"
+    echo "Usage: $0 rajiniops"
     exit 1
 fi
 

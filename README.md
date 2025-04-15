@@ -189,12 +189,13 @@ helm repo update
 # Install Prometheus
 helm install prometheus prometheus-community/kube-prometheus-stack \
   --namespace monitoring \
+  --create-namespace \
   --set prometheus.service.type=NodePort \
-  --set prometheus.service.nodePort=9090 \
+  --set prometheus.service.nodePort=30900 \
   --set grafana.service.type=NodePort \
-  --set grafana.service.nodePort=3000 \
+  --set grafana.service.nodePort=32000 \
   --set alertmanager.service.type=NodePort \
-  --set alertmanager.service.nodePort=9093
+  --set alertmanager.service.nodePort=31900
 ```
 
 3. **Verify Monitoring Stack**
@@ -208,7 +209,6 @@ kubectl get svc -n monitoring
 1. **Deploy Sample Service**
 ```bash
 kubectl apply -f microservices/service1/deployment.yaml -n microservices
-kubectl apply -f microservices/service1/service.yaml -n microservices
 ```
 
 2. **Deploy Load Generator**
@@ -236,12 +236,13 @@ kubectl create secret generic slack-bot-secrets -n aiops-bot \
 
 2. **Deploy Bot**
 ```bash
+# Apply RBAC first
 kubectl apply -f aiops-bot/rbac.yaml -n aiops-bot
-kubectl apply -f aiops-bot/deployment.yaml -n aiops-bot
-```
 
-3. **Verify Bot Deployment**
-```bash
+# Then apply the deployment
+kubectl apply -f aiops-bot/deployment.yaml -n aiops-bot
+
+# Verify deployment
 kubectl get pods -n aiops-bot
 kubectl logs -n aiops-bot deployment/aiops-bot
 ```
@@ -249,16 +250,16 @@ kubectl logs -n aiops-bot deployment/aiops-bot
 ## Accessing Services
 
 1. **Grafana Dashboard**
-   - URL: http://localhost:3000
+   - URL: http://localhost:32000
    - Default credentials: admin/prom-operator
    - Import dashboards from `monitoring/dashboards/`
 
 2. **Prometheus**
-   - URL: http://localhost:9090
+   - URL: http://localhost:30900
    - Access metrics and alerts
 
 3. **Alertmanager**
-   - URL: http://localhost:9093
+   - URL: http://localhost:31900
    - Configure alert notifications
 
 4. **Sample Service**
