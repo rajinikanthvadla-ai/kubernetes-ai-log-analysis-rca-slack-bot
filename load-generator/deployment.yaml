@@ -2,6 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: load-generator
+  namespace: microservices
   labels:
     app: load-generator
 spec:
@@ -16,7 +17,7 @@ spec:
     spec:
       containers:
       - name: load-generator
-        image: load-generator:latest
+        image: rajiniops/load-generator:latest
         imagePullPolicy: IfNotPresent
         env:
         - name: TARGET_SERVICE
@@ -28,5 +29,7 @@ spec:
             cpu: "500m"
             memory: "512Mi"
           requests:
-            cpu: "200m"
-            memory: "256Mi" 
+            cpu: "100m"
+            memory: "128Mi"
+        ports:
+        - containerPort: 8080

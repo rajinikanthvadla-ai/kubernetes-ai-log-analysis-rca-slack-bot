@@ -15,54 +15,31 @@ spec:
       labels:
         app: aiops-bot
     spec:
+      serviceAccountName: aiops-bot
       containers:
       - name: aiops-bot
-        image: aiops-bot:latest
-        imagePullPolicy: Never
+        image: rajiniops/aiops-bot:latest
+        envFrom:
+        - secretRef:
+            name: slack-bot-secrets
+        resources:
+          requests:
+            cpu: "100m"
+            memory: "128Mi"
+          limits:
+            cpu: "500m"
+            memory: "512Mi"
         ports:
-        - containerPort: 3000
-        env:
-        - name: SLACK_BOT_TOKEN
-          valueFrom:
-            secretKeyRef:
-              name: slack-bot-secrets
-              key: SLACK_BOT_TOKEN
-        - name: SLACK_APP_TOKEN
-          valueFrom:
-            secretKeyRef:
-              name: slack-bot-secrets
-              key: SLACK_APP_TOKEN
-        - name: HUGGINGFACE_API_KEY
-          valueFrom:
-            secretKeyRef:
-              name: slack-bot-secrets
-              key: HUGGINGFACE_API_KEY
-        - name: HUGGINGFACE_MODEL
-          valueFrom:
-            secretKeyRef:
-              name: slack-bot-secrets
-              key: HUGGINGFACE_MODEL
-        - name: HUGGINGFACE_API_URL
-          valueFrom:
-            secretKeyRef:
-              name: slack-bot-secrets
-              key: HUGGINGFACE_API_URL
+        - containerPort: 8080
         livenessProbe:
           httpGet:
             path: /health
-            port: 3000
+            port: 8080
           initialDelaySeconds: 5
           periodSeconds: 10
         readinessProbe:
           httpGet:
             path: /health
-            port: 3000
+            port: 8080
           initialDelaySeconds: 5
-          periodSeconds: 10
-        resources:
-          requests:
-            cpu: 100m
-            memory: 128Mi
-          limits:
-            cpu: 200m
-            memory: 256Mi 
+          periodSeconds: 10 
