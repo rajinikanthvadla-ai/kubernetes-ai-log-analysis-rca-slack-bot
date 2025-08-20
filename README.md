@@ -1,4 +1,4 @@
-# Kubernetes AI Log Analysis RCA Slack Bot
+# Kubernetes AI Log Analysis RCA Slack Bot..
 
 This project provides a comprehensive solution for monitoring Kubernetes clusters, analyzing logs, and performing root cause analysis using AI. It includes a Slack bot for easy interaction and a load generator for testing.
 
